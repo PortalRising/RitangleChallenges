@@ -4,7 +4,7 @@ FROM rust:1.82-bullseye
 RUN apt update -y && apt upgrade -y
 
 # Install zsh and sudo
-RUN apt install zsh sudo
+RUN apt install zsh sudo -y
 
 # Set it to the default shell
 RUN sudo chsh -s $(which zsh)
