@@ -1,5 +1,8 @@
 FROM rust:1.82-bullseye
 
+# Fetch packages and upgrade
+RUN apt update -y && apt upgrade -y
+
 # Install zsh and sudo
 RUN apt install zsh sudo
 
