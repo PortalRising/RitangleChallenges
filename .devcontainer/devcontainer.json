@@ -2,6 +2,17 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {
-  }
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "usernamehw.errorlens",
+        "ms-azuretools.vscode-docker",
+        "PKief.material-icon-theme",
+        "zhuangtongfa.material-theme"
+      ]
+    }
+  },
+  "features": {}
 }
