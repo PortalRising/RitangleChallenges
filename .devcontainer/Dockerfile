@@ -1,8 +1,10 @@
 FROM rust:1.82-bullseye
 
-# Install zsh and set it to the default shell
-RUN apt install zsh
-RUN chsh -s $(which zsh)
+# Install zsh and sudo
+RUN apt install zsh sudo
+
+# Set it to the default shell
+RUN sudo chsh -s $(which zsh)
 
 # Install OhMyZSH
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
