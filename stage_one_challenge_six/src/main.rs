@@ -74,18 +74,18 @@ fn main() {
         }
     
         {
-            // Assume x and y are the sides c and a
+            // Assume x and y are the sides a and c
             // a^2 = b^2 + c^2 - 2bcCosA
             // b^2 - 2bcCosA + c^2 - a^2 = 0
             // b^2 - (2cCosA)b + (c^2 - a^2) = 0
             let quad_a = 1.0;
-            let quad_b = 2.0 * side_x * angle_rads.cos();
-            let quad_c = side_x.powi(2) - side_y.powi(2);
+            let quad_b = 2.0 * side_y * angle_rads.cos();
+            let quad_c = side_y.powi(2) - side_x.powi(2);
 
             let side = quadratic_formula(quad_a, quad_b, quad_c);
 
             if side.is_some() && side.unwrap() < shortest_side {
-                println!("C {} {} {}", side_y, side.unwrap(), side_x);
+                println!("C {} {} {}", side_x, side.unwrap(), side_y);
                 shortest_side = side.unwrap();
             }
         }
