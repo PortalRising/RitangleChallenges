@@ -20,7 +20,7 @@ fn quadratic_formula(a: f64, b: f64, c: f64) -> Option<f64> {
     // but its a length so it cannot
     let positive_root = (negative_b + sqrt_discriminant) / divisor; 
 
-    println!("{} {} {} {}", negative_b, sqrt_discriminant, divisor, positive_root);
+    // println!("{} {} {} {}", negative_b, sqrt_discriminant, divisor, positive_root);
 
     // If root is negative then the other root is probably negative too so return nothing
     if positive_root < 0.0 {
@@ -33,12 +33,14 @@ fn quadratic_formula(a: f64, b: f64, c: f64) -> Option<f64> {
 fn main() {
     let values: [f64; 3] = [50.0, 60.0, 70.0];
 
-    let mut shortest_side = f64::INFINITY;
-
+    let mut shortest_combo = [0.0; 4];
+    let mut shortest_perimeter = f64::INFINITY;    
     for combination in values.iter().permutations(3) {
+        let mut shortest_side = f64::INFINITY;
+
         let side_x = *combination[0];
         let side_y = *combination[1];
-        let angle_rads = (*combination[2] / 180.0) * f64::consts::PI;
+        let angle_rads = combination[2].to_radians();
 
         println!("{} {} {}", side_x, side_y, angle_rads);
         {
@@ -48,6 +50,7 @@ fn main() {
             let a = a_squared.sqrt();
 
             if a < shortest_side {
+                println!("A {} {} {}", a, side_x, side_y);
                 shortest_side = a;
             }
         }
@@ -65,6 +68,7 @@ fn main() {
             let side = quadratic_formula(quad_a, quad_b, quad_c);
 
             if side.is_some() && side.unwrap() < shortest_side {
+                println!("B {} {} {}", side_x, side_y, side.unwrap());
                 shortest_side = side.unwrap();
             }
         }
@@ -81,10 +85,21 @@ fn main() {
             let side = quadratic_formula(quad_a, quad_b, quad_c);
 
             if side.is_some() && side.unwrap() < shortest_side {
+                println!("C {} {} {}", side_y, side.unwrap(), side_x);
                 shortest_side = side.unwrap();
             }
         }
+
+        // Evaluate perimeter
+        let perimeter = shortest_side + side_x + side_y;
+
+        if perimeter < shortest_perimeter {
+            shortest_combo = [side_x, side_y, shortest_side, angle_rads.to_degrees()];
+            shortest_perimeter = perimeter;
+        }
     }
 
-    println!("shortest side = {}", shortest_side);
+    println!();
+    println!("{:?}", shortest_combo);
+    println!("shortest perimeter = {}", shortest_perimeter);
 }
