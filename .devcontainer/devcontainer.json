@@ -10,7 +10,8 @@
         "usernamehw.errorlens",
         "ms-azuretools.vscode-docker",
         "PKief.material-icon-theme",
-        "zhuangtongfa.material-theme"
+        "zhuangtongfa.material-theme",
+        "vadimcn.vscode-lldb"
       ]
     }
   },

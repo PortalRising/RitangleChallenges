@@ -1,4 +1,7 @@
-use std::{array, fmt::{self, Debug}};
+use std::{
+    array,
+    fmt::{self, Debug},
+};
 
 pub struct Grid([u8; Self::NUM_OF_ELEMENTS]);
 
@@ -8,10 +11,10 @@ impl Grid {
     /// Convert the index to a digit within the grid
     fn index_to_digit(index: u32, digit_position: u8) -> u8 {
         let divisor = 10u32.pow(digit_position as u32);
-        
+
         return ((index / divisor) % 10) as u8;
     }
-    
+
     /// Get the max number of possible forms the grid can be expressed as
     pub fn max_permutations() -> u32 {
         10u32.pow(Self::NUM_OF_ELEMENTS as u32)
@@ -34,6 +37,10 @@ impl Grid {
         [first, second, third]
     }
 
+    /// Get all the numbers in the grid
+    pub fn numbers(&self) -> [u8; 9] {
+        self.0
+    }
 
     pub fn new(init_sequence: u32) -> Self {
         // Convert code into a grid of numbers

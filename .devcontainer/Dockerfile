@@ -11,3 +11,6 @@ RUN sudo chsh -s $(which zsh)
 
 # Install OhMyZSH
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Install rustfmt
+RUN rustup component add rustfmt
