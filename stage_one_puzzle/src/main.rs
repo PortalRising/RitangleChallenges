@@ -1,26 +1,33 @@
-use grid::Grid;
-use rules::*;
+use primes::PRIMES;
+use puzzle::Puzzle;
+use rules::RuleEnforcer;
 
-pub mod grid;
 pub mod primes;
+pub mod puzzle;
 pub mod rules;
 
 fn main() {
-    // Create an array of all rules to apply
-    let rules: &[fn(&Grid) -> bool] = &[clue_one];
-
     // Store all the valid grids that follow the rules
-    let mut valid_grids: Vec<Grid> = Vec::with_capacity(50);
+    let mut valid_grids: Vec<Puzzle> = Vec::with_capacity(50);
 
     // Go through every possible grid
-    for i in 0..Grid::max_permutations() {
-        let puzzle_attempt = Grid::new(i);
 
-        // Apply all clues
-        let is_valid = rules.iter().all(|rule| rule(&puzzle_attempt));
+    for i in 0..Puzzle::max_permutations() {
+        if i % (Puzzle::max_permutations() / 50) == 0 {
+            println!(
+                "{}% complete",
+                (i as f64 / Puzzle::max_permutations() as f64).floor() * 100.0
+            );
+        }
 
-        // Store all valid clues
-        if is_valid {
+        // Convert the index into a valid puzzle
+        let puzzle_attempt = Puzzle::new(i);
+
+        // Create a rule enforcer
+        let mut rule_enforcer = RuleEnforcer::new(&puzzle_attempt);
+
+        // Apply all clues and store all valid clues
+        if rule_enforcer.validate_q() {
             valid_grids.push(puzzle_attempt);
         }
     }
@@ -30,5 +37,5 @@ fn main() {
         println!("{:?}", grid);
     }
 
-    println!("{} Valid grid permutations", valid_grids.len());
+    println!("{} Valid puzzle permutations", valid_grids.len());
 }
