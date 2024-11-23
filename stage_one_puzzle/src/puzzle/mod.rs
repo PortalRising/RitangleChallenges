@@ -31,6 +31,11 @@ impl Puzzle {
         column_index + (row_index * 3)
     }
 
+    /// Convert a position on grid, starting at 0,0 symbolising the top left, to the digit stored
+    pub fn grid_position_to_digit(&self, column_index: usize, row_index: usize) -> usize {
+        self.0[Self::grid_position_to_index(column_index, row_index)]
+    }
+
     /// Get the numbers in the row at the provided offsets
     fn row(&self, index: usize, start_offset: usize, end_offset: usize) -> Vec<usize> {
         // Create start and end indexes, including the offset

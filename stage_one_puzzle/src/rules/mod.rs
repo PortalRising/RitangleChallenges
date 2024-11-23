@@ -4,6 +4,8 @@ use r::RRules;
 use result::ValidationResult;
 use s::SRules;
 
+use crate::us::UnitedStatesLookup;
+
 use super::Puzzle;
 
 mod p;
@@ -45,7 +47,38 @@ impl<'a> RuleEnforcer<'a> {
     /// and GH the corresponding minutes.
     /// This function converts the values of A to H to longitude and latitude then confines them to the continental US
     fn question_twenty_one(&self) -> bool {
-        true
+        /// Join two digits where x is the most significant digit
+        fn join_two_digits(x: usize, y: usize) -> usize {
+            (x * 10) + y
+        }
+
+        // The digits of A to H on the grid
+        let grid_digits: Vec<usize> = [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, 1),
+            (2, 2),
+            (1, 2),
+            (0, 2),
+            (0, 1),
+        ]
+        .into_iter()
+        .map(|(column, row)| self.puzzle.grid_position_to_digit(column, row))
+        .collect();
+
+        // Join the digits together
+        let ab = join_two_digits(grid_digits[0], grid_digits[1]) as f64;
+        let cd = join_two_digits(grid_digits[2], grid_digits[3]) as f64;
+        let ef = join_two_digits(grid_digits[4], grid_digits[5]) as f64;
+        let gh = join_two_digits(grid_digits[6], grid_digits[7]) as f64;
+
+        // Get latitude and longitude from A to H
+        let latitude = ab + (cd / 60.0);
+        // We flip the sign of longitude because it gives us values West but we want East
+        let longitude = -(ef + (gh / 60.0));
+
+        UnitedStatesLookup::gps_to_state(longitude, latitude).is_some()
     }
 
     /// Apply all the rules for all kinds of the puzzle
@@ -54,8 +87,7 @@ impl<'a> RuleEnforcer<'a> {
         let mut result = ValidationResult::new_invalid();
 
         // All puzzles must follow these rules
-        let follows_base_rules =
-            self.question_five() && self.question_eighteen() && self.question_twenty_one();
+        let follows_base_rules = self.question_five() && self.question_eighteen();
 
         if !follows_base_rules {
             // It cannot follow the base rules for all puzzles
@@ -68,6 +100,18 @@ impl<'a> RuleEnforcer<'a> {
         QRules::new(&self.puzzle).apply(result.q_mut());
         RRules::new(&self.puzzle).apply(result.r_mut());
         SRules::new(&self.puzzle).apply(result.s_mut());
+
+        // Check the GPS position last because it takes an ungodly amount of time
+        if !result.is_any_valid() || !self.question_twenty_one() {
+            return ValidationResult::new_invalid();
+        }
+
+        if self.puzzle.grid_position_to_digit(1, 1) == 2 {
+            // The only valid puzzle of S has N of 2, so we can limit the set further for the others
+            let mut only_s = ValidationResult::new_invalid();
+            *only_s.s_mut() = true;
+            return only_s;
+        }
 
         // && self.question_four()
         return result;

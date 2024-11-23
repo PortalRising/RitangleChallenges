@@ -3,6 +3,7 @@ use std::array;
 use puzzle::Puzzle;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use rules::RuleEnforcer;
+use us::UnitedStatesLookup;
 
 pub mod lookup_tables;
 pub mod puzzle;
@@ -10,6 +11,8 @@ pub mod rules;
 pub mod us;
 
 fn main() {
+    UnitedStatesLookup::gps_to_state(0.0, 0.0);
+
     // Go through every possible grid
     // and store all the valid grids that follow the rules
     let any_valid_puzzle: Vec<_> = (0..Puzzle::max_permutations())
@@ -60,4 +63,6 @@ fn main() {
         "{} Valid puzzle S permutations",
         valid_puzzle_groups[3].len()
     );
+
+    println!("{:?}", valid_puzzle_groups);
 }

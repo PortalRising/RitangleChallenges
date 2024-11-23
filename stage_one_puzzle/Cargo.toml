@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 geo = "0.29.2"
 geojson = "0.24.1"
+itertools = "0.13.0"
 rayon = "1.10.0"
 
 [profile.release]
