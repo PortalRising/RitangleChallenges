@@ -61,11 +61,22 @@ impl<'a> QRules<'a> {
         LookupTables::is_prime(two_down)
     }
 
+    /// 3 Across "see" 5 Across, unknown how to implement this :(
+    // fn question_twenty_two(&self) -> bool {
+    //     // Get the digits of 3 Across and 5 Across
+    //     let three_across_digits = self.puzzle.numbers_at(PuzzlePosition::new_across(3));
+    //     let five_across_digits = self.puzzle.numbers_at(PuzzlePosition::new_across(5));
+
+    //     five_across_digits[1..] == three_across_digits
+    //         || five_across_digits[..2] == three_across_digits
+    // }
+
     /// Apply all the rules for Q and store whether it was successful
     pub fn apply(&self, is_valid: &mut bool) {
         *is_valid = self.question_seven()
             && self.question_nine()
             && self.question_fourteen()
             && self.question_seventeen();
+        // && self.question_twenty_two();
     }
 }

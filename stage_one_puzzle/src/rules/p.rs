@@ -90,12 +90,21 @@ impl<'a> PRules<'a> {
         five_across % all_digits_sum == 0
     }
 
+    /// 4 Down should be triangular
+    fn question_twenty_five(&self) -> bool {
+        // Get 4 Down
+        let four_down = self.puzzle.joined_numbers_at(PuzzlePosition::new_down(4));
+
+        LookupTables::is_triangular(four_down)
+    }
+
     /// Apply all the rules for Q and store whether it was successful
     pub fn apply(&self, is_valid: &mut bool) {
         *is_valid = self.question_four()
             && self.question_eight()
             && self.question_ten()
             && self.question_twelve()
-            && self.question_twenty_one();
+            && self.question_twenty_one()
+            && self.question_twenty_five();
     }
 }
