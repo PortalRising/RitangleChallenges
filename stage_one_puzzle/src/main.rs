@@ -1,41 +1,62 @@
-use primes::PRIMES;
+use std::array;
+
 use puzzle::Puzzle;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use rules::RuleEnforcer;
 
-pub mod primes;
+pub mod lookup_tables;
 pub mod puzzle;
 pub mod rules;
 
 fn main() {
-    // Store all the valid grids that follow the rules
-    let mut valid_grids: Vec<Puzzle> = Vec::with_capacity(50);
-
     // Go through every possible grid
+    // and store all the valid grids that follow the rules
+    let any_valid_puzzle: Vec<_> = (0..Puzzle::max_permutations())
+        .into_par_iter()
+        // Convert the index to the sequence of digits for the puzzle
+        .map(|seed_sequence| Puzzle::new(seed_sequence))
+        // Validate the puzzle and check if follows the rules provided
+        .map(|attempt| {
+            // Create a rule enforcer
+            let mut rule_enforcer = RuleEnforcer::new(&attempt);
 
-    for i in 0..Puzzle::max_permutations() {
-        if i % (Puzzle::max_permutations() / 50) == 0 {
-            println!(
-                "{}% complete",
-                (i as f64 / Puzzle::max_permutations() as f64).floor() * 100.0
-            );
-        }
+            // Apply all clues and see if its valid
+            let result = rule_enforcer.apply_all_rules();
 
-        // Convert the index into a valid puzzle
-        let puzzle_attempt = Puzzle::new(i);
+            (attempt, result)
+        })
+        // Filter out all puzzles that not valid for any rules
+        .filter(|(_, result)| result.is_any_valid())
+        .collect();
 
-        // Create a rule enforcer
-        let mut rule_enforcer = RuleEnforcer::new(&puzzle_attempt);
+    // Filter out the puzzles into the kinds they are valid for
+    let mut valid_puzzle_groups: [Vec<Puzzle>; 4] = array::from_fn(|_| Vec::with_capacity(512));
 
-        // Apply all clues and store all valid clues
-        if rule_enforcer.validate_q() {
-            valid_grids.push(puzzle_attempt);
+    for (puzzle, result) in any_valid_puzzle {
+        for (puzzle_kind, is_valid) in result.results().into_iter().enumerate() {
+            if !is_valid {
+                continue;
+            }
+
+            valid_puzzle_groups[puzzle_kind].push(puzzle);
         }
     }
 
-    // Output all valid grids
-    for grid in &valid_grids {
-        println!("{:?}", grid);
-    }
-
-    println!("{} Valid puzzle permutations", valid_grids.len());
+    // Output the number of valid puzzles for each kind
+    println!(
+        "{} Valid puzzle P permutations",
+        valid_puzzle_groups[0].len()
+    );
+    println!(
+        "{} Valid puzzle Q permutations",
+        valid_puzzle_groups[1].len()
+    );
+    println!(
+        "{} Valid puzzle R permutations",
+        valid_puzzle_groups[2].len()
+    );
+    println!(
+        "{} Valid puzzle S permutations",
+        valid_puzzle_groups[3].len()
+    );
 }
