@@ -11,7 +11,7 @@ pub mod rules;
 pub mod us;
 
 fn main() {
-    UnitedStatesLookup::gps_to_state(0.0, 0.0);
+    UnitedStatesLookup::is_within_us(0.0, 0.0);
 
     // Go through every possible grid
     // and store all the valid grids that follow the rules

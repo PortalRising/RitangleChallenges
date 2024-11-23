@@ -47,38 +47,7 @@ impl<'a> RuleEnforcer<'a> {
     /// and GH the corresponding minutes.
     /// This function converts the values of A to H to longitude and latitude then confines them to the continental US
     fn question_twenty_one(&self) -> bool {
-        /// Join two digits where x is the most significant digit
-        fn join_two_digits(x: usize, y: usize) -> usize {
-            (x * 10) + y
-        }
-
-        // The digits of A to H on the grid
-        let grid_digits: Vec<usize> = [
-            (0, 0),
-            (1, 0),
-            (2, 0),
-            (2, 1),
-            (2, 2),
-            (1, 2),
-            (0, 2),
-            (0, 1),
-        ]
-        .into_iter()
-        .map(|(column, row)| self.puzzle.grid_position_to_digit(column, row))
-        .collect();
-
-        // Join the digits together
-        let ab = join_two_digits(grid_digits[0], grid_digits[1]) as f64;
-        let cd = join_two_digits(grid_digits[2], grid_digits[3]) as f64;
-        let ef = join_two_digits(grid_digits[4], grid_digits[5]) as f64;
-        let gh = join_two_digits(grid_digits[6], grid_digits[7]) as f64;
-
-        // Get latitude and longitude from A to H
-        let latitude = ab + (cd / 60.0);
-        // We flip the sign of longitude because it gives us values West but we want East
-        let longitude = -(ef + (gh / 60.0));
-
-        UnitedStatesLookup::gps_to_state(longitude, latitude).is_some()
+        UnitedStatesLookup::is_within_us(-self.puzzle.longitude(), self.puzzle.latitude())
     }
 
     /// Apply all the rules for all kinds of the puzzle

@@ -71,9 +71,9 @@ impl UnitedStatesLookup {
         })
     }
 
-    /// Get the state that the GPS coordinate is on where longitude represents east and latitude represents north, as long as it is on one inside the
-    /// continental United States (This means it excludes Hawaii, Alaska, and Puerto Rico from the search)
-    pub fn gps_to_state<'a>(longitude: f64, latitude: f64) -> Option<&'a str> {
+    /// Check to see if the GPS coordinate is within the continental United State where longitude represents east and latitude represents north
+    /// (This means it excludes Hawaii, Alaska, and Puerto Rico from the search)
+    pub fn is_within_us<'a>(longitude: f64, latitude: f64) -> bool {
         let test_point = Point::new(longitude, latitude);
         for state in Self::all_continental_states() {
             // Get geometry
@@ -81,11 +81,11 @@ impl UnitedStatesLookup {
 
             // Check if point is within geometry
             if test_point.is_within(state_geometry) {
-                return Some(state.name());
+                return true;
             }
         }
 
         // This point is not within a state
-        None
+        false
     }
 }

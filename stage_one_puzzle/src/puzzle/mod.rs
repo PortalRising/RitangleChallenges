@@ -36,7 +36,20 @@ impl Puzzle {
         self.0[Self::grid_position_to_index(column_index, row_index)]
     }
 
-    /// Get the numbers in the row at the provided offsets
+    /// Join the list of numbers together where the first number is the most significant digit
+    /// and the last number is the least significant
+    fn join_digits(digits: &[usize]) -> usize {
+        let mut total = 0;
+        let offset = digits.len() as u32 - 1;
+
+        for (i, &num) in digits.iter().enumerate() {
+            total += 10usize.pow(offset - (i as u32)) * (num as usize);
+        }
+
+        return total;
+    }
+
+    /// Get the digits in the row at the provided offsets
     fn row(&self, index: usize, start_offset: usize, end_offset: usize) -> Vec<usize> {
         // Create start and end indexes, including the offset
         let start = Self::grid_position_to_index(start_offset, index);
@@ -45,12 +58,26 @@ impl Puzzle {
         self.0[start..end].to_vec()
     }
 
-    /// Get the numbers in the column at the provided offset
+    /// Get the digits as one number in the row at the provided offsets
+    fn joined_row(&self, index: usize, start_offset: usize, end_offset: usize) -> usize {
+        let numbers = self.row(index, start_offset, end_offset);
+
+        Self::join_digits(&numbers)
+    }
+
+    /// Get the digits in the column at the provided offset
     fn column(&self, index: usize, start_offset: usize, end_offset: usize) -> Vec<usize> {
         let start = Self::grid_position_to_index(index, start_offset);
         let end = Self::grid_position_to_index(index, 3 - end_offset);
 
         return (start..end).step_by(3).map(|i| self.0[i]).collect();
+    }
+
+    /// Get the digits as one number in the column at the provided offsets
+    fn joined_column(&self, index: usize, start_offset: usize, end_offset: usize) -> usize {
+        let numbers = self.column(index, start_offset, end_offset);
+
+        Self::join_digits(&numbers)
     }
 
     /// Get the numbers along the provided position
@@ -68,16 +95,9 @@ impl Puzzle {
 
     /// Get the numbers joined together along the provided position
     pub fn joined_numbers_at(&self, position: PuzzlePosition) -> usize {
-        let mut total = 0;
-
         let numbers = self.numbers_at(position);
-        let offset = numbers.len() as u32 - 1;
 
-        for (i, &num) in numbers.iter().enumerate() {
-            total += 10usize.pow(offset - (i as u32)) * (num as usize);
-        }
-
-        return total;
+        Self::join_digits(&numbers)
     }
 
     /// Get all the numbers in the grid
@@ -94,6 +114,36 @@ impl Puzzle {
         digits.reverse();
 
         Self(digits)
+    }
+
+    /// Get the value of N in the puzzle
+    pub fn n_digit(&self) -> usize {
+        self.0[4]
+    }
+
+    /// Get the longitude the puzzle represents
+    pub fn longitude(&self) -> f64 {
+        // EF is the degrees west and GH are the corresponding minutes
+        let mut fe = self.row(2, 1, 0);
+        let mut hg = self.column(0, 1, 0);
+
+        // Reverse the digits to get the right ordering of digits
+        fe.reverse();
+        hg.reverse();
+
+        let ef = Self::join_digits(&fe) as f64;
+        let gh = Self::join_digits(&hg) as f64;
+
+        ef + (gh / 60.0)
+    }
+
+    /// Get the latitude the puzzle represents
+    pub fn latitude(&self) -> f64 {
+        // AB is the degrees north and CD are the corresponding minutes
+        let ab = self.joined_row(0, 0, 1) as f64;
+        let cd = self.joined_column(2, 0, 1) as f64;
+
+        ab + (cd / 60.0)
     }
 }
 
@@ -162,5 +212,10 @@ mod tests {
         assert_eq!(puzzle.joined_numbers_at(PuzzlePosition::new_down(2)), 25);
 
         assert_eq!(puzzle.joined_numbers_at(PuzzlePosition::new_down(4)), 69);
+    }
+
+    #[test]
+    fn test_joined_digits() {
+        assert_eq!(Puzzle::join_digits(&[1, 2, 3]), 123);
     }
 }
