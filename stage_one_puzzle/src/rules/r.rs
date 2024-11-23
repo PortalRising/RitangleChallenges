@@ -84,11 +84,38 @@ impl<'a> RRules<'a> {
         three_across == (four_down - four_down_sum)
     }
 
+    /// 1 Across has the same digit sum as 1 Down
+    fn question_twenty_three(&self) -> bool {
+        // Get 1 Across and 1 Down as digits
+        let one_across_digits = self.puzzle.numbers_at(PuzzlePosition::new_across(1));
+        let one_down_digits = self.puzzle.numbers_at(PuzzlePosition::new_down(1));
+
+        // Find the sum of their digits
+        let one_down_sum = one_down_digits.iter().sum::<usize>();
+        let two_down_sum = one_across_digits.iter().sum::<usize>();
+
+        one_down_sum == two_down_sum
+    }
+
+    /// 5 Across has prime digit sum
+    fn question_twenty_six(&self) -> bool {
+        // Get 5 Across as digit sum
+        let five_across = self
+            .puzzle
+            .numbers_at(PuzzlePosition::new_across(5))
+            .into_iter()
+            .sum::<usize>();
+
+        LookupTables::is_prime(five_across)
+    }
+
     /// Apply all the rules for Q and store whether it was successful
     pub fn apply(&self, is_valid: &mut bool) {
         *is_valid = self.question_eleven()
             && self.question_fifteen()
             && self.question_sixteen()
-            && self.question_nineteen();
+            && self.question_nineteen()
+            && self.question_twenty_three()
+            && self.question_twenty_six();
     }
 }

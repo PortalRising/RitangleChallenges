@@ -10,30 +10,26 @@ fn index_to_dice(index: u64, dice_index: u32) -> u64 {
     ((index / divisor) % (MAX_FACE - MIN_FACE + 1)) + MIN_FACE
 }
 
-fn take_turn(depth: u8, valid: &mut u64, combos: &mut u64) {
-    if depth >= 2 {
-        return;
-    }
-
+fn take_turns(one_wins: &mut u64, two_wins: &mut u64, three_wins: &mut u64) {
     const COMBOS: u64 = 6u64.pow(6);
 
     for combo_index in 0..COMBOS {
         // Convert index into an array of dies
         let dies: [u64; 6] = core::array::from_fn(|i| index_to_dice(combo_index, i as u32));
 
-        *combos += 1;
-
         if dies[0] + dies[1] == 7 {
+            *one_wins += 1;
             continue;
         }
 
         if dies[2] + dies[3] == 7 {
-            *valid += 1;
+            *two_wins += 1;
             continue;
         }
 
-        if dies[4] + dies[5] != 7 {
-            take_turn(depth + 1, valid, combos);
+        if dies[4] + dies[5] == 7 {
+            *three_wins += 1;
+            continue;
         }
     }
 
@@ -41,10 +37,17 @@ fn take_turn(depth: u8, valid: &mut u64, combos: &mut u64) {
 }
 
 fn main() {
-    let mut combos: u64 = 0;
-    let mut valid: u64 = 0;
+    let mut one_wins: u64 = 0;
+    let mut two_wins: u64 = 0;
+    let mut three_wins: u64 = 0;
 
-    take_turn(0, &mut valid, &mut combos);
+    take_turns(&mut one_wins, &mut two_wins, &mut three_wins);
 
-    println!("{} {} {}", valid, combos, valid as f64 / combos as f64)
+    println!(
+        "{} {} {} {}",
+        one_wins,
+        two_wins,
+        three_wins,
+        (two_wins) as f64 / (one_wins + two_wins + three_wins) as f64
+    )
 }

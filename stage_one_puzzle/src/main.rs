@@ -63,6 +63,4 @@ fn main() {
         "{} Valid puzzle S permutations",
         valid_puzzle_groups[3].len()
     );
-
-    println!("{:?}", valid_puzzle_groups);
 }
