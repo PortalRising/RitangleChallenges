@@ -1,5 +1,6 @@
-use std::array;
+use std::{array, collections::HashSet};
 
+use itertools::Itertools;
 use puzzle::Puzzle;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use rules::RuleEnforcer;
@@ -46,21 +47,69 @@ fn main() {
         }
     }
 
+    // Collect all the values of N in each puzzle kind
+    let values_of_n: [Vec<usize>; 4] = array::from_fn(|group_index| {
+        let mut unique_n_values = HashSet::new();
+
+        // Go through every valid puzzle and append the value of N to the hashset
+        for puzzle in &valid_puzzle_groups[group_index] {
+            unique_n_values.insert(puzzle.n_digit());
+        }
+
+        unique_n_values.into_iter().collect()
+    });
+
+    // Filter out all invalid combinations of n orderings (all values of n must be unique)
+    let valid_n_combos: Vec<Vec<usize>> = values_of_n
+        .into_iter()
+        .multi_cartesian_product()
+        .filter(|n_combo| n_combo.iter().all_unique())
+        .collect();
+
+    // Filter out puzzles that do not follow the unique N rules
+    let mut n_valid_puzzle_groups: [Vec<Puzzle>; 4] =
+        array::from_fn(|i| Vec::with_capacity(valid_puzzle_groups[i].len()));
+
+    for (group_index, group) in valid_puzzle_groups.into_iter().enumerate() {
+        for puzzle in group {
+            if valid_n_combos
+                .iter()
+                .any(|combination| combination[group_index] == puzzle.n_digit())
+            {
+                n_valid_puzzle_groups[group_index].push(puzzle);
+            }
+        }
+    }
+
+    println!("{:?}", valid_n_combos);
+
     // Output the number of valid puzzles for each kind
     println!(
         "{} Valid puzzle P permutations",
-        valid_puzzle_groups[0].len()
+        n_valid_puzzle_groups[0].len()
     );
     println!(
         "{} Valid puzzle Q permutations",
-        valid_puzzle_groups[1].len()
+        n_valid_puzzle_groups[1].len()
     );
     println!(
         "{} Valid puzzle R permutations",
-        valid_puzzle_groups[2].len()
+        n_valid_puzzle_groups[2].len()
     );
     println!(
         "{} Valid puzzle S permutations",
-        valid_puzzle_groups[3].len()
+        n_valid_puzzle_groups[3].len()
     );
+
+    for (index, group) in n_valid_puzzle_groups.iter().enumerate() {
+        for puzzle in group {
+            println!(
+                "Group: {}, N: {}, Longitude: {}, Latitude: {}",
+                ['P', 'Q', 'R', 'S'][index],
+                puzzle.n_digit(),
+                puzzle.longitude(),
+                puzzle.latitude()
+            );
+        }
+    }
 }

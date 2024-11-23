@@ -47,6 +47,7 @@ impl<'a> RuleEnforcer<'a> {
     /// and GH the corresponding minutes.
     /// This function converts the values of A to H to longitude and latitude then confines them to the continental US
     fn question_twenty_one(&self) -> bool {
+        // We flip longitude to get the direction east as the puzzle represents west
         UnitedStatesLookup::is_within_us(-self.puzzle.longitude(), self.puzzle.latitude())
     }
 
