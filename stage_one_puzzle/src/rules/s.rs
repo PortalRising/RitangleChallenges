@@ -78,12 +78,21 @@ impl<'a> SRules<'a> {
         five_across == (one_down + three_across + four_down)
     }
 
+    /// 1 Across is composite
+    fn question_twenty_seven(&self) -> bool {
+        let one_across = self.puzzle.joined_numbers_at(PuzzlePosition::new_across(1));
+
+        // A composite number is a number that has more than two numbers (therefore, not a prime)
+        !LookupTables::is_prime(one_across)
+    }
+
     /// Apply all the rules for Q and store whether it was successful
     pub fn apply(&self, is_valid: &mut bool) {
         *is_valid = self.question_thirteen()
             && self.question_fifteen()
             && self.question_sixteen()
             && self.question_nineteen()
-            && self.question_twenty_four();
+            && self.question_twenty_four()
+            && self.question_twenty_seven();
     }
 }
