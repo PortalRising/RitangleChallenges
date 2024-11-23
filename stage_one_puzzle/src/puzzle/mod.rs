@@ -31,26 +31,21 @@ impl Puzzle {
         column_index + (row_index * 3)
     }
 
-    /// Get the numbers in the row at the provided offsets (truncating any that are shifted off the row)
+    /// Get the numbers in the row at the provided offsets
     fn row(&self, index: usize, start_offset: usize, end_offset: usize) -> Vec<usize> {
         // Create start and end indexes, including the offset
-        let start = (index * 3) + start_offset;
-        let end = (index * 3) + 3 - end_offset;
+        let start = Self::grid_position_to_index(start_offset, index);
+        let end = Self::grid_position_to_index(3 - end_offset, index);
 
         self.0[start..end].to_vec()
     }
 
-    /// Get the numbers in the column at the provided offset (truncating any that are shifted off the column)
+    /// Get the numbers in the column at the provided offset
     fn column(&self, index: usize, start_offset: usize, end_offset: usize) -> Vec<usize> {
-        let start = index + (start_offset * 3);
-        let end = Self::NUM_OF_ELEMENTS - (end_offset * 3);
-        let mut column = Vec::with_capacity(3);
+        let start = Self::grid_position_to_index(index, start_offset);
+        let end = Self::grid_position_to_index(index, 3 - end_offset);
 
-        for i in (start..end).step_by(3) {
-            column.push(self.0[i]);
-        }
-
-        return column;
+        return (start..end).step_by(3).map(|i| self.0[i]).collect();
     }
 
     /// Get the numbers along the provided position
