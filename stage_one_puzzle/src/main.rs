@@ -7,6 +7,7 @@ use rules::RuleEnforcer;
 pub mod lookup_tables;
 pub mod puzzle;
 pub mod rules;
+pub mod us;
 
 fn main() {
     // Go through every possible grid

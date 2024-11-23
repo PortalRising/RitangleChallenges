@@ -44,7 +44,9 @@ impl<'a> RuleEnforcer<'a> {
     /// EF gives the degrees West
     /// and GH the corresponding minutes.
     /// This function converts the values of A to H to longitude and latitude then confines them to the continental US
-    fn _question_twenty_one() {}
+    fn question_twenty_one(&self) -> bool {
+        true
+    }
 
     /// Apply all the rules for all kinds of the puzzle
     pub fn apply_all_rules(&mut self) -> ValidationResult {
@@ -52,7 +54,8 @@ impl<'a> RuleEnforcer<'a> {
         let mut result = ValidationResult::new_invalid();
 
         // All puzzles must follow these rules
-        let follows_base_rules = self.question_five() && self.question_eighteen();
+        let follows_base_rules =
+            self.question_five() && self.question_eighteen() && self.question_twenty_one();
 
         if !follows_base_rules {
             // It cannot follow the base rules for all puzzles
