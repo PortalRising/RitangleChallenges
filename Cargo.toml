@@ -5,7 +5,7 @@ members = [
     "stage_one_puzzle",
     "stage_two_challenge_eight",
     "stage_two_challenge_six",
-    "stage_two_challenge_three", "stage_two_question_five", "stage_two_question_seven",
+    "stage_two_challenge_three", "stage_two_question_five", "stage_two_question_seven", "the_finale",
 ]
 
 [profile.release]

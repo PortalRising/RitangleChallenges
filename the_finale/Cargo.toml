@@ -1,0 +1,11 @@
+[package]
+name = "the_finale"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hashbrown = "0.15.1"
+itertools = "0.13.0"
+num-integer = "0.1.46"
+petgraph = "0.6.5"
+tinyvec = "1.8.0"

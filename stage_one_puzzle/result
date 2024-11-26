@@ -1,0 +1,55 @@
+[[3, 1, 4, 2]]
+1 Valid puzzle P permutations
+4 Valid puzzle Q permutations
+1 Valid puzzle R permutations
+1 Valid puzzle S permutations
+Group: P, N: 3, Longitude: -86.76666666666667, Latitude: 36.2, Numbers: [3, 6, 1, 6, 3, 2, 4, 6, 8]
+Group: Q, N: 1, Longitude: -76.43333333333334, Latitude: 37.53333333333333, Numbers: [3, 7, 3, 6, 1, 2, 2, 6, 7]
+Group: Q, N: 1, Longitude: -77.43333333333334, Latitude: 37.53333333333333, Numbers: [3, 7, 3, 6, 1, 2, 2, 7, 7]
+Group: Q, N: 1, Longitude: -78.43333333333334, Latitude: 37.53333333333333, Numbers: [3, 7, 3, 6, 1, 2, 2, 8, 7]
+Group: Q, N: 1, Longitude: -79.43333333333334, Latitude: 37.53333333333333, Numbers: [3, 7, 3, 6, 1, 2, 2, 9, 7]
+Group: R, N: 4, Longitude: -85.75, Latitude: 38.25, Numbers: [3, 8, 1, 5, 4, 5, 4, 5, 8]
+Group: S, N: 2, Longitude: -82.53333333333333, Latitude: 27.95, Numbers: [2, 7, 5, 2, 2, 7, 3, 2, 8]
+
+Manually processed...
+
+P: 56XM+X8W Nashville, Tennessee, USA
+
+Q 76: GHM8+8MM Hartfield, Virginia, USA
+Q 77: GHM8+8MM Richmond, Virginia, USA
+Q 78: GHM8+8MM Dillwyn, Virginia, USA
+Q 79: GHM8+8MM Big Island, Virginia, USA
+
+R: 7722+22X Louisville, Kentucky, USA
+
+S: XF28+2M3 Tampa, Florida, USA
+
+[3, 1, 4, 2]
+
+[P, Q, R, S]
+
+Ordering [Q, S, P, R]
+
+Code = RTNL
+
+Digits
+
+Q
+3, 7, 3, 
+6, 1, 2, 
+2, 7, 7
+
+S
+2, 7, 5,
+2, 2, 7,
+3, 2, 8
+
+P
+3, 6, 1,
+6, 3, 2,
+4, 6, 8
+
+R
+3, 8, 1,
+5, 4, 5,
+4, 5, 8

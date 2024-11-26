@@ -104,11 +104,12 @@ fn main() {
     for (index, group) in n_valid_puzzle_groups.iter().enumerate() {
         for puzzle in group {
             println!(
-                "Group: {}, N: {}, Longitude: {}, Latitude: {}",
+                "Group: {}, N: {}, Longitude: {}, Latitude: {}, Numbers: {:?}",
                 ['P', 'Q', 'R', 'S'][index],
                 puzzle.n_digit(),
-                puzzle.longitude(),
-                puzzle.latitude()
+                -puzzle.longitude(),
+                puzzle.latitude(),
+                puzzle.numbers()
             );
         }
     }

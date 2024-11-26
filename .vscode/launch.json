@@ -1,0 +1,88 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'stage_one_puzzle'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=stage_one_puzzle",
+                    "--package=stage_one_puzzle"
+                ],
+                "filter": {
+                    "name": "stage_one_puzzle",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'stage_one_puzzle'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=stage_one_puzzle",
+                    "--package=stage_one_puzzle"
+                ],
+                "filter": {
+                    "name": "stage_one_puzzle",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'the_finale'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=the_finale",
+                    "--package=the_finale"
+                ],
+                "filter": {
+                    "name": "the_finale",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "initCommands": [
+                "settings set target.disable-aslr false"
+            ]
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'the_finale'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=the_finale",
+                    "--package=the_finale"
+                ],
+                "filter": {
+                    "name": "the_finale",
+                    "kind": "bin"
+                },
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "initCommands": [
+                "settings set target.disable-aslr false"
+            ]
+        }
+    ]
+}
