@@ -2,6 +2,7 @@ use itertools::Itertools;
 
 use crate::{
     // lookup_tables::pythagorean_triples::PythagoreanTriplesTable,
+    lookup_tables::pythagorean_triples::PythagoreanTriplesTable,
     puzzle::{
         position::{GridPosition, IdentifierVector, PuzzleDirection, PuzzleIdentifier},
         wall::WallDirection,
@@ -129,6 +130,8 @@ impl TrianglesChallenge {
             ],
         );
 
+        println!("Triples: {}", PythagoreanTriplesTable::triples().len());
+
         let valid_puzzles = rule_executor.compute();
 
         println!("Total: {}", valid_puzzles.len());
@@ -147,6 +150,76 @@ impl TrianglesChallenge {
             },
         ];
 
+        let across_clues = [
+            IdentifierVector {
+                identifier: PuzzleIdentifier(1),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(2),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(4),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(6),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(8),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(11),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(13),
+                direction: PuzzleDirection::Across,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(14),
+                direction: PuzzleDirection::Across,
+            },
+        ];
+
+        let down_clues = [
+            IdentifierVector {
+                identifier: PuzzleIdentifier(10),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(12),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(7),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(1),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(9),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(5),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(2),
+                direction: PuzzleDirection::Down,
+            },
+            IdentifierVector {
+                identifier: PuzzleIdentifier(3),
+                direction: PuzzleDirection::Down,
+            },
+        ];
+
         // Go through every valid puzzle and get unique perimeters
         let mut unique_perimeters = hashbrown::HashSet::new();
         for puzzle in valid_puzzles {
@@ -161,24 +234,53 @@ impl TrianglesChallenge {
 
             unique_perimeters.insert(perimeter);
 
-            println!("{}, {}", puzzle, perimeter);
+            let across_sum: usize = across_clues
+                .iter()
+                .map(|&vector| (vector, puzzle.number_at(vector).unwrap()))
+                .map(|(vector, num)| {
+                    println!("{:?}: {}", vector, num);
+                    num
+                })
+                .sum();
+
+            let down_sum: usize = down_clues
+                .iter()
+                .map(|&vector| (vector, puzzle.number_at(vector).unwrap()))
+                .map(|(vector, num)| {
+                    println!("{:?}: {}", vector, num);
+                    num
+                })
+                .sum();
+
+            if across_sum.abs_diff(down_sum) == perimeter {
+                println!("Hello");
+            }
+            println!(
+                "A{} - D{} = {}",
+                across_sum,
+                down_sum,
+                across_sum.abs_diff(down_sum)
+            );
+            println!("{}", perimeter);
+
+            println!("{}", puzzle);
             println!();
         }
 
         // If there are two perimeters get the difference
-        if unique_perimeters.len() == 2 {
-            let (perimeters_a, perimeter_b) =
-                unique_perimeters.into_iter().collect_tuple().unwrap();
+        // if unique_perimeters.len() == 2 {
+        //     let (perimeters_a, perimeter_b) =
+        //         unique_perimeters.into_iter().collect_tuple().unwrap();
 
-            println!(
-                "Perimeter difference, {}",
-                perimeters_a.abs_diff(perimeter_b)
-            );
-        } else {
-            println!(
-                "{} unique perimeters, too few/many to consolidate a final answer, we need two",
-                unique_perimeters.len()
-            )
-        }
+        //     println!(
+        //         "Perimeter difference, {}",
+        //         perimeters_a.abs_diff(perimeter_b)
+        //     );
+        // } else {
+        //     println!(
+        //         "{} unique perimeters, too few/many to consolidate a final answer, we need two",
+        //         unique_perimeters.len()
+        //     )
+        // }
     }
 }
