@@ -1,4 +1,4 @@
-use std::{iter, sync::LazyLock};
+use std::sync::LazyLock;
 
 use itertools::Itertools;
 use num_integer::Integer;
@@ -22,7 +22,7 @@ impl CoprimesTable {
 
                 // Check all other numbers
                 for other_num in 1..num {
-                    // Check if the LCM is one, therefore they are coprimes
+                    // Check if the GCD is one, therefore they are coprimes
                     if num.gcd(&other_num) != 1 {
                         continue;
                     }
@@ -84,11 +84,9 @@ impl CoprimesTable {
     }
 
     /// Get all coprimes of a number
-    pub fn coprimes_of<'a>(
-        number: usize,
-    ) -> iter::Chain<Neighbors<'a, usize>, std::array::IntoIter<usize, 1>> {
+    pub fn coprimes_of<'a>(number: usize) -> Neighbors<'a, usize> {
         // Get coprime table
-        Self::coprimes().neighbors(number).chain([1])
+        Self::coprimes().neighbors(number)
     }
 
     /// Checks if all numbers are coprimes with each other

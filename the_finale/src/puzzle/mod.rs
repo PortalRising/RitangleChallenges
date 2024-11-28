@@ -351,39 +351,39 @@ impl Display for Puzzle {
 
                 // Write digit
                 match self.digits[digit_index] {
-                    Some(digit) => write!(f, "{}", digit),
-                    None => write!(f, "N"),
+                    Some(digit) => write!(f, "{} ", digit),
+                    None => write!(f, "N "),
                 }?;
 
                 // Write wall
-                if column_index != self.shared.num_columns - 1
-                    && self.is_direction_blocked(current_position, PuzzleDirection::Across)
-                {
-                    write!(f, "|")?;
-                } else {
-                    write!(f, " ")?;
-                };
+                // if column_index != self.shared.num_columns - 1
+                //     && self.is_direction_blocked(current_position, PuzzleDirection::Across)
+                // {
+                //     write!(f, "|")?;
+                // } else {
+                //     write!(f, " ")?;
+                // };
             }
 
             writeln!(f, "")?;
 
-            if row_index == self.shared.num_rows - 1 {
-                continue;
-            }
+            // if row_index == self.shared.num_rows - 1 {
+            //     continue;
+            // }
 
-            // Write under walls
-            for column_index in 0..self.shared.num_columns {
-                let current_position = GridPosition::new(column_index, row_index);
+            // // Write under walls
+            // for column_index in 0..self.shared.num_columns {
+            //     let current_position = GridPosition::new(column_index, row_index);
 
-                // Write wall
-                if self.is_direction_blocked(current_position, PuzzleDirection::Down) {
-                    write!(f, "- ")?;
-                } else {
-                    write!(f, "  ")?;
-                };
-            }
+            //     // Write wall
+            //     // if self.is_direction_blocked(current_position, PuzzleDirection::Down) {
+            //     //     write!(f, "- ")?;
+            //     // } else {
+            //     //     write!(f, "  ")?;
+            //     // };
+            // }
 
-            writeln!(f, "")?;
+            // writeln!(f, "")?;
         }
 
         write!(f, "]")

@@ -69,7 +69,7 @@ impl<'a> RuleExecutor<'a> {
             for identifier in puzzle.identifers() {
                 // Convert identifier to grid position
                 let grid_position = puzzle.identifer_to_grid(*identifier);
-
+                
                 // If the digit is 0 or unfilled, this is not a valid puzzle
                 if puzzle.digit_at(grid_position).unwrap_or(0) == 0 {
                     return false;

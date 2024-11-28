@@ -132,9 +132,8 @@ impl TrianglesChallenge {
 
         println!("Triples: {}", PythagoreanTriplesTable::triples().len());
 
-        let valid_puzzles = rule_executor.compute();
+        let mut valid_puzzles = rule_executor.compute();
 
-        println!("Total: {}", valid_puzzles.len());
         let perimeter_vectors = [
             IdentifierVector {
                 identifier: PuzzleIdentifier(1),
@@ -220,8 +219,25 @@ impl TrianglesChallenge {
             },
         ];
 
+        let all_vectors: Vec<IdentifierVector> =
+            across_clues.iter().copied().chain(down_clues).collect();
+
+        valid_puzzles.retain(|puzzle| {
+            for (vector_a, vector_b) in all_vectors.iter().copied().tuple_combinations() {
+                let number_a = puzzle.number_at(vector_a).unwrap();
+                let number_b = puzzle.number_at(vector_b).unwrap();
+
+                if number_a == number_b {
+                    return false;
+                }
+            }
+
+            true
+        });
+
+        println!("Total: {}", valid_puzzles.len());
+
         // Go through every valid puzzle and get unique perimeters
-        let mut unique_perimeters = hashbrown::HashSet::new();
         for puzzle in valid_puzzles {
             let perimeter: usize = perimeter_vectors
                 .iter()
@@ -232,28 +248,27 @@ impl TrianglesChallenge {
                 })
                 .sum();
 
-            unique_perimeters.insert(perimeter);
+            for (vector_a, vector_b) in all_vectors.iter().copied().tuple_combinations() {
+                let number_a = puzzle.number_at(vector_a).unwrap();
+                let number_b = puzzle.number_at(vector_b).unwrap();
+
+                if number_a.abs_diff(number_b) == perimeter {
+                    println!("{:?} - {:?} matches Perimeter", vector_a, vector_b)
+                }
+            }
 
             let across_sum: usize = across_clues
                 .iter()
-                .map(|&vector| (vector, puzzle.number_at(vector).unwrap()))
-                .map(|(vector, num)| {
-                    println!("{:?}: {}", vector, num);
-                    num
-                })
+                .map(|&vector| puzzle.number_at(vector).unwrap())
                 .sum();
 
             let down_sum: usize = down_clues
                 .iter()
-                .map(|&vector| (vector, puzzle.number_at(vector).unwrap()))
-                .map(|(vector, num)| {
-                    println!("{:?}: {}", vector, num);
-                    num
-                })
+                .map(|&vector| puzzle.number_at(vector).unwrap())
                 .sum();
 
             if across_sum.abs_diff(down_sum) == perimeter {
-                println!("Hello");
+                println!("Perimeter matches D");
             }
             println!(
                 "A{} - D{} = {}",
@@ -261,26 +276,11 @@ impl TrianglesChallenge {
                 down_sum,
                 across_sum.abs_diff(down_sum)
             );
-            println!("{}", perimeter);
+
+            println!("Perimeter = {}", perimeter);
 
             println!("{}", puzzle);
             println!();
         }
-
-        // If there are two perimeters get the difference
-        // if unique_perimeters.len() == 2 {
-        //     let (perimeters_a, perimeter_b) =
-        //         unique_perimeters.into_iter().collect_tuple().unwrap();
-
-        //     println!(
-        //         "Perimeter difference, {}",
-        //         perimeters_a.abs_diff(perimeter_b)
-        //     );
-        // } else {
-        //     println!(
-        //         "{} unique perimeters, too few/many to consolidate a final answer, we need two",
-        //         unique_perimeters.len()
-        //     )
-        // }
     }
 }
