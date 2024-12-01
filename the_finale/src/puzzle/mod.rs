@@ -320,13 +320,8 @@ impl Puzzle {
         let mut new_puzzle = self.clone();
 
         for (vector, number) in numbers.iter().copied() {
-            // Convert the number into digits
-            // let num_digits = Self::number_to_digits(number);
-
-            // Check if the number can fit
-            // self.can_digits_fit(vector, num_digits)?;
-
-            // Apply digits as we do fit
+            // Attempt to fit the number into the puzzle
+            // TODO! Perhaps there is no need to clone the puzzle after every insertion here?
             new_puzzle = new_puzzle.try_fit_number(vector, number)?;
         }
 
@@ -354,36 +349,9 @@ impl Display for Puzzle {
                     Some(digit) => write!(f, "{} ", digit),
                     None => write!(f, "N "),
                 }?;
-
-                // Write wall
-                // if column_index != self.shared.num_columns - 1
-                //     && self.is_direction_blocked(current_position, PuzzleDirection::Across)
-                // {
-                //     write!(f, "|")?;
-                // } else {
-                //     write!(f, " ")?;
-                // };
             }
 
             writeln!(f, "")?;
-
-            // if row_index == self.shared.num_rows - 1 {
-            //     continue;
-            // }
-
-            // // Write under walls
-            // for column_index in 0..self.shared.num_columns {
-            //     let current_position = GridPosition::new(column_index, row_index);
-
-            //     // Write wall
-            //     // if self.is_direction_blocked(current_position, PuzzleDirection::Down) {
-            //     //     write!(f, "- ")?;
-            //     // } else {
-            //     //     write!(f, "  ")?;
-            //     // };
-            // }
-
-            // writeln!(f, "")?;
         }
 
         write!(f, "]")
